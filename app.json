@@ -1,4 +1,14 @@
 {
-  "name": "StudyScheduleApp",
-  "displayName": "StudyScheduleApp"
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "03cc1ab6-42cd-45fe-825f-e89a64421345"
+      }
+    },
+    "owner": "hoanganhvu123",
+    "slug": "study-hub",
+    "plugins": [
+      "expo-font"
+    ]
+  }
 }

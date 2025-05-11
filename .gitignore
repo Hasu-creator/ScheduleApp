@@ -1,88 +1,37 @@
-# macOS
-.DS_Store
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
-# Xcode / iOS
-build/
-*.ipa
-*.pbxuser
-!default.pbxuser
-*.mode1v3
-!default.mode1v3
-*.mode2v3
-!default.mode2v3
-*.perspectivev3
-!default.perspectivev3
-xcuserdata
-*.xccheckout
-*.moved-aside
-DerivedData
-*.hmap
-*.xcuserstate
-**/.xcode.env.local
-/ios/Pods/
-/ios/*.pbxproj
-/ios/*.xcworkspace/
-/ios/*.xcodeproj/
-/ios/build/
-
-# Android/IntelliJ
-.idea
-.gradle
-local.properties
-*.iml
-*.hprof
-.cxx/
-*.keystore
-!debug.keystore
-.kotlin/
-/android/app/build/
-/android/build/
-/android/app/release/
-/android/app/debug/
-/android/gradle/
-/android/.idea/
-/android/*.iml
-/android/local.properties
-
-# node.js
+# dependencies
 node_modules/
-npm-debug.log
-yarn-error.log
 
-# Yarn
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
 
-# React Native
-*.jsbundle
-*.map
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
 
 # Metro
-.metro/
 .metro-health-check*
 
-# fastlane
-**/fastlane/report.xml
-**/fastlane/Preview.html
-**/fastlane/screenshots
-**/fastlane/test_output
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
 
-# Testing
-/coverage
+# macOS
+.DS_Store
+*.pem
 
-# Ruby / CocoaPods
-**/Pods/
-/vendor/bundle/
+# local env files
+.env*.local
 
-# Bundle artifact
-*.app
-
-# Environment
-.env
-
-
-
+# typescript
+*.tsbuildinfo
