@@ -50,11 +50,10 @@ export default function TabsLayout() {
         headerShown: false,
         tabBarStyle: {
           height: 70,
-          borderTopWidth: 0.5,
-          borderTopColor: "#eee",
+          backgroundColor: "transparent"
         },
         tabBarLabelStyle: {
-          display: "none", // Hide text labels
+          display: "none",
         },
       })}
     >
