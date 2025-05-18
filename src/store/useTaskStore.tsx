@@ -1,17 +1,20 @@
 import { create } from "zustand";
 
-type Task = {
+export type Task = {
   id: string;
   title: string;
+  description: string;
+  type: string;
+  date: string;
+  startTime: string;
+  endTime: string;
   completed: boolean;
 };
 
 type TasksState = {
   tasks: Task[];
   addTask: (task: Task) => void;
-  removeTask: (id: string) => void;
-  toggleTask: (id: string) => void;
-  clearTasks: () => void;
+  completeTask: (id: string) => void;
 };
 
 export const useTasksStore = create<TasksState>((set) => ({
@@ -20,15 +23,10 @@ export const useTasksStore = create<TasksState>((set) => ({
     set((state) => ({
       tasks: [...state.tasks, task],
     })),
-  removeTask: (id) =>
-    set((state) => ({
-      tasks: state.tasks.filter((task) => task.id !== id),
-    })),
-  toggleTask: (id) =>
+  completeTask: (id: string) =>
     set((state) => ({
       tasks: state.tasks.map((task) =>
         task.id === id ? { ...task, completed: !task.completed } : task
       ),
     })),
-  clearTasks: () => set({ tasks: [] }),
 }));

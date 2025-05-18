@@ -1,26 +1,39 @@
+// app/index.tsx or app/home.tsx
 import React from "react";
-import { View, Text, Image, StyleSheet, FlatList } from "react-native";
-import { useTasksStore } from "../../store/useTaskStore";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  FlatList,
+  ScrollView,
+} from "react-native";
+import { useTasksStore } from "@/store/useTaskStore";
 import Header from "@/components/Header";
+import TaskCard from "@/components/TaskCard";
+import TaskCategoryCard from "@/components/TaskCategoryCard";
+import { formatTime } from "@/utils/helper";
+
 export default function HomeScreen() {
   const tasks = useTasksStore((state) => state.tasks);
 
   return (
     <View style={styles.container}>
-      <Header title="homeScreen" />
+      <Header />
+
       {tasks.length === 0 ? (
-        <View style={styles.container}>
+        <View style={styles.emptyContainer}>
           <Image
-            source={require("../../images/bg_home_2.png")}
+            source={require("@/images/bg_home_2.png")}
             style={styles.image}
             resizeMode="contain"
           />
           <Image
-            source={require("../../images/bg_radiant_home_2.png")}
+            source={require("@/images/bg_radiant_home_2.png")}
             style={styles.imageBg1}
           />
           <Image
-            source={require("../../images/bg_radiant_home_1.png")}
+            source={require("@/images/bg_radiant_home_1.png")}
             style={styles.imageBg2}
           />
           <Text style={styles.title}>
@@ -32,15 +45,54 @@ export default function HomeScreen() {
           </Text>
         </View>
       ) : (
-        <FlatList
-          data={tasks}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View style={styles.taskItem}>
-              <Text>{item.title}</Text>
-            </View>
-          )}
-        />
+        <View style={styles.taskListContainer}>
+          <Image
+            source={require("@/images/bg_radiant_home_2.png")}
+            style={styles.imageBg1}
+          />
+          <Image
+            source={require("@/images/bg_radiant_home_1.png")}
+            style={styles.imageBg2}
+          />
+          <ScrollView contentContainerStyle={styles.scroll}>
+            <Text style={styles.sectionTitle}>Manage Daily Task</Text>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              style={styles.cardScroll}
+            >
+              <TaskCategoryCard
+                title="UI Interface App"
+                description="Design user interface using prototype"
+                progress={0.6}
+                color="#4F46E5"
+              />
+              <TaskCategoryCard
+                title="Learn English"
+                description="Do reading, listening & writing ielts tasks"
+                progress={0.4}
+                color="#F59E0B"
+              />
+            </ScrollView>
+            {/* TODO: Task list here */}
+          </ScrollView>
+          <Text style={styles.todayLabel}>Today’s Tasks</Text>
+          <FlatList
+            data={tasks}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={{ paddingTop: 12 }}
+            renderItem={({ item }) => (
+              <TaskCard
+                id={item.id}
+                title={item.title}
+                time={`${formatTime(item.startTime)} - ${formatTime(
+                  item.endTime
+                )}`}
+                completed={item.completed}
+              />
+            )}
+          />
+        </View>
       )}
     </View>
   );
@@ -49,15 +101,15 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#fff",
+    paddingTop: 40,
+  },
+  emptyContainer: {
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
     position: "relative",
-  },
-  hasTasksContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
   },
   image: {
     width: 390,
@@ -94,27 +146,24 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     fontFamily: "Inter_400Regular",
   },
-  button: {
-    backgroundColor: "#F9FAFB",
-    borderRadius: 10,
-    paddingVertical: 8,
-    paddingHorizontal: 24,
-    elevation: 3,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    borderWidth: 1,
-    borderColor: "#F9FAFB",
+  taskListContainer: {
+    flex: 1,
+    padding: 20,
   },
-  buttonText: {
-    color: "#000",
-    fontWeight: "600",
+  todayLabel: {
+    fontSize: 18,
     fontFamily: "Inter_600SemiBold",
-    fontSize: 16,
+    marginBottom: 8,
   },
-  taskItem: {
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
+  scroll: {
+    padding: 0,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginVertical: 10,
+  },
+  cardScroll: {
+    marginVertical: 10,
   },
 });

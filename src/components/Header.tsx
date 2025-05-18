@@ -1,60 +1,60 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter, useNavigation } from "expo-router";
 
-type HeaderProps = {
-  title: string;
-  showBackButton?: boolean;
-};
-
-export default function Header({ title, showBackButton = false }: HeaderProps) {
-  const navigation = useNavigation();
-  const router = useRouter();
-
+export default function Header() {
   return (
     <View style={styles.container}>
-      {showBackButton ? (
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={styles.left}
-        >
-          <Ionicons name="chevron-back" size={24} color="#000" />
-        </TouchableOpacity>
-      ) : (
-        <View style={styles.left} />
-      )}
-      <Text style={styles.title}>{title}</Text>
-      <View style={styles.right} /> {/* Reserved for future right icon */}
+      {/* Left side: Avatar + Greeting */}
+      <View style={styles.left}>
+        <Image
+          source={require("../images/avatar.png")}
+          style={styles.avatar}
+        />
+        <View style={styles.textGroup}>
+          <Text style={styles.greeting}>Hello!</Text>
+          <Text style={styles.name}>Chau Loc</Text>
+        </View>
+      </View>
+
+      {/* Right side: Notification bell */}
+      <TouchableOpacity>
+        <Ionicons name="notifications-outline" size={28} color="#222" />
+      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    height: 56,
+    paddingHorizontal: 20,
+    paddingTop: 50,
+    paddingBottom: 20,
     flexDirection: "row",
-    alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 16,
-    backgroundColor: "transparent",
-    marginTop: 30,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "600",
-    fontFamily: "Inter_600SemiBold",
-    textAlign: "center",
-    flex: 1,
+    alignItems: "center",
+    backgroundColor: "#fff",
   },
   left: {
-    width: 40,
-    justifyContent: "center",
-    alignItems: "flex-start",
+    flexDirection: "row",
+    alignItems: "center",
   },
-  right: {
-    width: 40,
+  avatar: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginRight: 12,
+  },
+  textGroup: {
     justifyContent: "center",
-    alignItems: "flex-end",
+  },
+  greeting: {
+    fontSize: 14,
+    color: "#444",
+  },
+  name: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#000",
   },
 });
