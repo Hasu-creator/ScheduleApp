@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -7,22 +7,40 @@ import {
   StyleSheet,
   Pressable,
 } from "react-native";
-import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import { useAuth } from "../hooks/useAuth";
 import { LinearGradient } from "expo-linear-gradient";
 
 export default function SignUpScreen() {
   const router = useRouter();
+  const { signUp, authError, loading, user } = useAuth();
 
-  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [localError, setLocalError] = useState("");
+
+  const handleSignUp = async () => {
+    setLocalError("");
+
+    if (password !== confirmPassword) {
+      setLocalError("Passwords do not match.");
+      return;
+    }
+
+    await signUp(email, password);
+  };
+  useEffect(() => {
+    if (!loading && user) {
+      router.replace("/(tabs)/home");
+    }
+  }, [user, loading]);
 
   return (
     <View style={styles.container}>
-      {/* Background Gradient */}
       <LinearGradient
         colors={["#FFE7D4CC", "#BBC8F8"]}
         style={StyleSheet.absoluteFillObject}
@@ -34,20 +52,22 @@ export default function SignUpScreen() {
       <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
         <Ionicons name="arrow-back" size={24} color="#000" />
       </TouchableOpacity>
-
-      {/* Content */}
       <View style={styles.content}>
         <Text style={styles.title}>Sign Up</Text>
-        <Text style={styles.subtitle}>
-          Fill your information below or register{"\n"}with your social account
-        </Text>
+        <Text style={styles.subtitle}>Create a new account</Text>
 
-        {/* Username */}
+        {(authError || localError) && (
+          <Text style={{ color: "red", marginBottom: 8 }}>
+            {localError || authError}
+          </Text>
+        )}
+
+        {/* Username Field */}
         <Text style={styles.label}>Username</Text>
         <View style={styles.inputWrapper}>
           <Ionicons name="person" size={24} style={styles.icon} />
           <TextInput
-            placeholder="Enter your username"
+            placeholder="Enter username"
             placeholderTextColor="#A4A6AB"
             value={username}
             onChangeText={setUsername}
@@ -55,7 +75,7 @@ export default function SignUpScreen() {
           />
         </View>
 
-        {/* Email */}
+        {/* Email Field */}
         <Text style={styles.label}>Email</Text>
         <View style={styles.inputWrapper}>
           <Ionicons name="mail" size={24} style={styles.icon} />
@@ -69,7 +89,7 @@ export default function SignUpScreen() {
           />
         </View>
 
-        {/* Password */}
+        {/* Password Field */}
         <Text style={styles.label}>Password</Text>
         <View style={styles.inputWrapper}>
           <Ionicons name="lock-closed" size={24} style={styles.icon} />
@@ -93,38 +113,29 @@ export default function SignUpScreen() {
           </Pressable>
         </View>
 
-        {/* Confirm Password */}
-        <Text style={styles.label}>Confirm password</Text>
+        {/* Confirm Password Field */}
+        <Text style={styles.label}>Confirm Password</Text>
         <View style={styles.inputWrapper}>
           <Ionicons name="lock-closed" size={24} style={styles.icon} />
           <TextInput
-            placeholder="Confirm password"
+            placeholder="Confirm your password"
             placeholderTextColor="#A4A6AB"
             value={confirmPassword}
             onChangeText={setConfirmPassword}
             secureTextEntry={!showPassword}
             style={styles.input}
           />
-          <Pressable
-            onPress={() => setShowPassword((prev) => !prev)}
-            style={styles.eyeIcon}
-          >
-            <Ionicons
-              name={showPassword ? "eye-off-outline" : "eye-outline"}
-              size={20}
-              style={styles.iconEye}
-            />
-          </Pressable>
         </View>
 
-        {/* Sign Up Button */}
-        <TouchableOpacity style={styles.button}>
+        {/* Submit */}
+        <TouchableOpacity style={styles.button} onPress={handleSignUp}>
           <Text style={styles.buttonText}>Sign Up</Text>
         </TouchableOpacity>
+
         <Text style={styles.footerText}>
           Already have an account?{" "}
           <Text style={styles.link} onPress={() => router.push("/login")}>
-            Sign In
+            Sign in
           </Text>
         </Text>
       </View>

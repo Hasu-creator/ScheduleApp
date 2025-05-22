@@ -6,35 +6,49 @@ import {
   TouchableOpacity,
   StyleSheet,
   Pressable,
+  Alert,
 } from "react-native";
-import { useRouter, Redirect } from "expo-router";
+import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import SocialButtons from "../components/SocialButtons";
-
+import { useAuth } from "../hooks/useAuth";
+import { useEffect } from "react";
 export default function SignInScreen() {
   const router = useRouter();
-
+  const { user, signIn, authError, loading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const handleGoHomeScreen = () => {
-    try {
-      router.replace("/(tabs)/home");
-    } catch (error) {
-      console.log(error);
-    }
+
+  const handleSignIn = async () => {
+    await signIn(email, password);
   };
+  useEffect(() => {
+    if (!loading && user) {
+      router.replace("/(tabs)/home");
+    }
+  }, [user, loading]);
+  useEffect(() => {
+    if (authError) {
+      Alert.alert("Login Failed", authError);
+    }
+  }, [authError]);
   return (
     <View style={styles.container}>
+      <LinearGradient
+        colors={["#FFE7D4CC", "#BBC8F8"]}
+        style={StyleSheet.absoluteFillObject}
+        start={{ x: 0.1, y: 0.1 }}
+        end={{ x: 0.9, y: 0.9 }}
+      />
       <View style={styles.content}>
         <Text style={styles.title}>Sign In</Text>
         <Text style={styles.subtitle}>
           Hi, welcome back, you've been missed
         </Text>
 
-        {/* Email */}
         <Text style={styles.label}>Email</Text>
         <View style={styles.inputWrapper}>
           <Ionicons name="mail" size={24} style={styles.icon} />
@@ -48,7 +62,6 @@ export default function SignInScreen() {
           />
         </View>
 
-        {/* Password */}
         <Text style={styles.label}>Password</Text>
         <View style={styles.inputWrapper}>
           <Ionicons name="lock-closed" size={24} style={styles.icon} />
@@ -72,7 +85,6 @@ export default function SignInScreen() {
           </Pressable>
         </View>
 
-        {/* Remember me & Forgot password */}
         <View style={styles.row}>
           <Pressable
             onPress={() => setRememberMe((prev) => !prev)}
@@ -88,22 +100,18 @@ export default function SignInScreen() {
           <Text style={styles.forgotText}>Forgot password?</Text>
         </View>
 
-        {/* Sign In Button */}
-        <TouchableOpacity style={styles.button} onPress={handleGoHomeScreen}>
+        <TouchableOpacity style={styles.button} onPress={handleSignIn}>
           <Text style={styles.buttonText}>Sign In</Text>
         </TouchableOpacity>
 
-        {/* Or Continue With */}
         <View style={styles.orContainer}>
           <View style={styles.line} />
           <Text style={styles.orText}>Or continue with</Text>
           <View style={styles.line} />
         </View>
 
-        {/* Social Buttons */}
         <SocialButtons />
 
-        {/* Sign Up Link */}
         <Text style={styles.footerText}>
           Don’t have an account?{" "}
           <Text style={styles.link} onPress={() => router.push("/signup")}>
