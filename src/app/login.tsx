@@ -16,7 +16,7 @@ import { useAuth } from "../hooks/useAuth";
 import { useEffect } from "react";
 export default function SignInScreen() {
   const router = useRouter();
-  const { user, signIn, authError, loading } = useAuth();
+  const { user, signIn, authError, loading, clearAuthError } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -32,7 +32,14 @@ export default function SignInScreen() {
   }, [user, loading]);
   useEffect(() => {
     if (authError) {
-      Alert.alert("Login Failed", authError);
+      Alert.alert("Sign Up Failed", authError, [
+        {
+          text: "OK",
+          onPress: () => {
+            clearAuthError();
+          },
+        },
+      ]);
     }
   }, [authError]);
   return (

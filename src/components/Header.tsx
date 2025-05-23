@@ -1,16 +1,20 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-
+import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "expo-router";
 export default function Header() {
+  const { signOut } = useAuth();
+  const route = useRouter();
+  const handleSignOut = async () => {
+    await signOut();
+    route.replace("/login");
+  };
   return (
     <View style={styles.container}>
       {/* Left side: Avatar + Greeting */}
       <View style={styles.left}>
-        <Image
-          source={require("../images/avatar.png")}
-          style={styles.avatar}
-        />
+        <Image source={require("../images/avatar.png")} style={styles.avatar} />
         <View style={styles.textGroup}>
           <Text style={styles.greeting}>Hello!</Text>
           <Text style={styles.name}>Chau Loc</Text>
@@ -18,7 +22,7 @@ export default function Header() {
       </View>
 
       {/* Right side: Notification bell */}
-      <TouchableOpacity>
+      <TouchableOpacity onPress={handleSignOut}>
         <Ionicons name="notifications-outline" size={28} color="#222" />
       </TouchableOpacity>
     </View>

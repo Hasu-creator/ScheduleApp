@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Pressable,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -14,7 +15,7 @@ import { LinearGradient } from "expo-linear-gradient";
 
 export default function SignUpScreen() {
   const router = useRouter();
-  const { signUp, authError, loading, user } = useAuth();
+  const { signUp, authError, loading, user, clearAuthError } = useAuth();
 
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
@@ -38,7 +39,19 @@ export default function SignUpScreen() {
       router.replace("/(tabs)/home");
     }
   }, [user, loading]);
-
+  useEffect(() => {
+    if (authError || localError) {
+      Alert.alert("Sign Up Failed", authError || localError, [
+        {
+          text: "OK",
+          onPress: () => {
+            clearAuthError();
+            setLocalError("");
+          },
+        },
+      ]);
+    }
+  }, [authError, localError]);
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -55,12 +68,6 @@ export default function SignUpScreen() {
       <View style={styles.content}>
         <Text style={styles.title}>Sign Up</Text>
         <Text style={styles.subtitle}>Create a new account</Text>
-
-        {(authError || localError) && (
-          <Text style={{ color: "red", marginBottom: 8 }}>
-            {localError || authError}
-          </Text>
-        )}
 
         {/* Username Field */}
         <Text style={styles.label}>Username</Text>
