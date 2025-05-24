@@ -54,13 +54,9 @@ export default function HomeScreen() {
             source={require("@/images/bg_radiant_home_1.png")}
             style={styles.imageBg2}
           />
-          <ScrollView contentContainerStyle={styles.scroll}>
+          <View style={styles.scroll}>
             <Text style={styles.sectionTitle}>Manage Daily Task</Text>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              style={styles.cardScroll}
-            >
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <TaskCategoryCard
                 title="UI Interface App"
                 description="Design user interface using prototype"
@@ -75,7 +71,7 @@ export default function HomeScreen() {
               />
             </ScrollView>
             {/* TODO: Task list here */}
-          </ScrollView>
+          </View>
           <Text style={styles.todayLabel}>Today’s Tasks</Text>
           <FlatList
             data={tasks}

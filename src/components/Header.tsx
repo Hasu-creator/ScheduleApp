@@ -1,30 +1,51 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "expo-router";
-export default function Header() {
-  const { signOut } = useAuth();
-  const route = useRouter();
-  const handleSignOut = async () => {
-    await signOut();
-    route.replace("/login");
+import { signOut, getAuth } from "firebase/auth";
+import { format } from "date-fns";
+
+interface HeaderProps {
+  isDate?: boolean;
+}
+
+export default function Header({ isDate }: HeaderProps) {
+  const router = useRouter();
+  const logout = async () => {
+    const auth = getAuth();
+    await signOut(auth);
+    router.replace("/login");
   };
+
+  const today = format(new Date(), "d MMMM yyyy"); // e.g., 24 May 2025
+
   return (
     <View style={styles.container}>
-      {/* Left side: Avatar + Greeting */}
-      <View style={styles.left}>
-        <Image source={require("../images/avatar.png")} style={styles.avatar} />
-        <View style={styles.textGroup}>
-          <Text style={styles.greeting}>Hello!</Text>
-          <Text style={styles.name}>Chau Loc</Text>
+      {isDate ? (
+        <View style={styles.header}>
+          <Text style={styles.dateText}>{today}</Text>
+          <Ionicons name="notifications-outline" size={24} color="#333" />
         </View>
-      </View>
+      ) : (
+        <>
+          {/* Left side: Avatar + Greeting */}
+          <View style={styles.left}>
+            <Image
+              source={require("../images/avatar.png")}
+              style={styles.avatar}
+            />
+            <View style={styles.textGroup}>
+              <Text style={styles.greeting}>Hello!</Text>
+              <Text style={styles.name}>Chau Loc</Text>
+            </View>
+          </View>
 
-      {/* Right side: Notification bell */}
-      <TouchableOpacity onPress={handleSignOut}>
-        <Ionicons name="notifications-outline" size={28} color="#222" />
-      </TouchableOpacity>
+          {/* Right side: Notification bell */}
+          <TouchableOpacity onPress={logout}>
+            <Ionicons name="notifications-outline" size={28} color="#222" />
+          </TouchableOpacity>
+        </>
+      )}
     </View>
   );
 }
@@ -37,7 +58,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "transparent",
   },
   left: {
     flexDirection: "row",
@@ -60,5 +81,16 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: "#000",
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    flex: 1,
+  },
+  dateText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#333",
   },
 });

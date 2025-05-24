@@ -6,9 +6,18 @@ interface TaskCardProps {
   title: string;
   time: string;
   completed?: boolean;
+  isContent?: boolean;
+  description?: string;
 }
 import { useTasksStore } from "@/store/useTaskStore";
-export default function TaskCard({id,  title, time, completed }: TaskCardProps) {
+export default function TaskCard({
+  id,
+  title,
+  time,
+  completed,
+  isContent = false,
+  description,
+}: TaskCardProps) {
   const completeTask = useTasksStore((state) => state.completeTask);
 
   return (
@@ -19,10 +28,24 @@ export default function TaskCard({id,  title, time, completed }: TaskCardProps) 
           <Ionicons name="time-outline" size={16} color="#666" />
           <Text style={styles.time}>{time}</Text>
         </View>
+        {isContent && (
+          <View style={styles.timeRow}>
+            <Text style={styles.time}>{description}</Text>
+          </View>
+        )}
       </View>
-      <TouchableOpacity style={[styles.checkbox, completed && styles.checkboxCompleted]} onPress={() => completeTask(id)}>
-        {completed && <Ionicons name="checkmark" size={16} color="#fff" />}
-      </TouchableOpacity>
+      {!isContent ? (
+        <TouchableOpacity
+          style={[styles.checkbox, completed && styles.checkboxCompleted]}
+          onPress={() => completeTask(id)}
+        >
+          {completed && <Ionicons name="checkmark" size={16} color="#fff" />}
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity>
+          <Ionicons name="ellipsis-vertical-outline" size={16} color="#fff" />
+        </TouchableOpacity>
+      )}
     </View>
   );
 }

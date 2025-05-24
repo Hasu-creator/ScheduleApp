@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -17,24 +17,27 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { useRouter } from "expo-router";
 import { useTasksStore } from "@/store/useTaskStore";
 
+const taskTypeOptions = ["Assignment", "Reminder", "Revision"];
+const tabOptions = ["Tasks", "Classes", "Exams", "Vacations"];
+
 export default function AddTaskScreen() {
   const router = useRouter();
   const addTask = useTasksStore((state) => state.addTask);
+
   const [tab, setTab] = useState("Tasks");
   const [taskName, setTaskName] = useState("");
   const [description, setDescription] = useState("");
   const [taskType, setTaskType] = useState("");
 
-  const [showTypeModal, setShowTypeModal] = useState(false);
-
   const [date, setDate] = useState<Date | null>(null);
-  const [showDatePicker, setShowDatePicker] = useState(false);
-
   const [startTime, setStartTime] = useState<Date | null>(null);
-  const [showStartPicker, setShowStartPicker] = useState(false);
-
   const [endTime, setEndTime] = useState<Date | null>(null);
-  const [showEndPicker, setShowEndPicker] = useState(false);
+
+  const [activeModal, setActiveModal] = useState<
+    null | "type" | "date" | "start" | "end"
+  >(null);
+
+  const closeModal = () => setActiveModal(null);
 
   const handleResetState = () => {
     setTaskName("");
@@ -66,18 +69,50 @@ export default function AddTaskScreen() {
     router.back();
   };
 
+  const renderDateTimeModal = (
+    mode: "date" | "time",
+    value: Date | null,
+    onChange: (date: Date) => void
+  ) => (
+    <Modal transparent visible animationType="fade">
+      <Pressable style={styles.modalOverlay} onPress={closeModal}>
+        <View style={styles.modalContent}>
+          <DateTimePicker
+            themeVariant="light"
+            value={value || new Date()}
+            mode={mode}
+            display={
+              Platform.OS === "ios"
+                ? mode === "date"
+                  ? "inline"
+                  : "spinner"
+                : "default"
+            }
+            onChange={(event, selectedDate) => {
+              if (selectedDate) onChange(selectedDate);
+              closeModal();
+            }}
+          />
+        </View>
+      </Pressable>
+    </Modal>
+  );
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
       keyboardVerticalOffset={10}
     >
-      <ScrollView keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
         <Text style={styles.header}>New Task</Text>
 
         {/* Tabs */}
         <View style={styles.tabs}>
-          {["Tasks", "Classes", "Exams", "Vacations"].map((t) => (
+          {tabOptions.map((t) => (
             <TouchableOpacity key={t} onPress={() => setTab(t)}>
               <Text style={[styles.tabText, tab === t && styles.activeTab]}>
                 {t}
@@ -87,145 +122,70 @@ export default function AddTaskScreen() {
         </View>
 
         {/* Inputs */}
-        <Text style={styles.label}>Task Name</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Task Title"
-          value={taskName}
-          onChangeText={setTaskName}
-        />
+        <LabeledInput label="Task Name">
+          <TextInput
+            style={styles.input}
+            placeholder="Task Title"
+            value={taskName}
+            onChangeText={setTaskName}
+          />
+        </LabeledInput>
 
-        <Text style={styles.label}>Description</Text>
-        <TextInput
-          style={[styles.input, { height: 100 }]}
-          placeholder="Task Description"
-          value={description}
-          onChangeText={setDescription}
-          multiline
-        />
+        <LabeledInput label="Description">
+          <TextInput
+            style={[styles.input, { height: 100 }]}
+            placeholder="Task Description"
+            value={description}
+            onChangeText={setDescription}
+            multiline
+          />
+        </LabeledInput>
 
-        <Text style={styles.label}>Type</Text>
-        <TouchableOpacity
-          style={styles.input}
-          onPress={() => setShowTypeModal(true)}
-        >
-          <Text>{taskType || "Select task type"}</Text>
-          <Ionicons name="chevron-down-outline" size={20} />
-        </TouchableOpacity>
-        <Modal transparent visible={showTypeModal} animationType="fade">
-          <Pressable
-            style={styles.modalOverlay}
-            onPress={() => setShowTypeModal(false)}
+        <LabeledInput label="Type">
+          <TouchableOpacity
+            style={styles.input}
+            onPress={() => setActiveModal("type")}
           >
-            <View style={styles.modalContent}>
-              {["Assignment", "Reminder", "Revision"].map((option) => (
-                <TouchableOpacity
-                  key={option}
-                  onPress={() => {
-                    setTaskType(option);
-                    setShowTypeModal(false);
-                  }}
-                  style={{
-                    paddingVertical: 12,
-                    borderBottomWidth: 1,
-                    borderColor: "#eee",
-                  }}
-                >
-                  <Text>{option}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </Pressable>
-        </Modal>
+            <Text>{taskType || "Select task type"}</Text>
+            <Ionicons name="chevron-down-outline" size={20} />
+          </TouchableOpacity>
+        </LabeledInput>
 
-        {/* Date Picker */}
-        <Text style={styles.label}>Date</Text>
-        <TouchableOpacity
-          style={styles.input}
-          onPress={() => setShowDatePicker(true)}
-        >
-          <Text>{date ? date.toDateString() : "Select date"}</Text>
-          <Ionicons name="calendar-outline" size={20} />
-        </TouchableOpacity>
-        <Modal transparent visible={showDatePicker} animationType="fade">
-          <Pressable
-            style={styles.modalOverlay}
-            onPress={() => setShowDatePicker(false)}
+        <LabeledInput label="Date">
+          <TouchableOpacity
+            style={styles.input}
+            onPress={() => setActiveModal("date")}
           >
-            <View style={styles.modalContent}>
-              <DateTimePicker
-                themeVariant="light"
-                value={date || new Date()}
-                mode="date"
-                display={Platform.OS === "ios" ? "inline" : "default"}
-                onChange={(event, selectedDate) => {
-                  if (selectedDate) setDate(selectedDate);
-                  setShowDatePicker(false);
-                }}
-              />
-            </View>
-          </Pressable>
-        </Modal>
+            <Text>{date ? date.toDateString() : "Select date"}</Text>
+            <Ionicons name="calendar-outline" size={20} />
+          </TouchableOpacity>
+        </LabeledInput>
 
-        {/* Start Time Picker */}
-        <Text style={styles.label}>Start Time</Text>
-        <TouchableOpacity
-          style={styles.input}
-          onPress={() => setShowStartPicker(true)}
-        >
-          <Text>{startTime ? startTime.toLocaleTimeString() : "Select time"}</Text>
-          <Ionicons name="time-outline" size={20} />
-        </TouchableOpacity>
-        <Modal transparent visible={showStartPicker} animationType="fade">
-          <Pressable
-            style={styles.modalOverlay}
-            onPress={() => setShowStartPicker(false)}
+        <LabeledInput label="Start Time">
+          <TouchableOpacity
+            style={styles.input}
+            onPress={() => setActiveModal("start")}
           >
-            <View style={styles.modalContent}>
-              <DateTimePicker
-                themeVariant="light"
-                value={startTime || new Date()}
-                mode="time"
-                display={Platform.OS === "ios" ? "spinner" : "default"}
-                onChange={(event, selectedTime) => {
-                  if (selectedTime) setStartTime(selectedTime);
-                  setShowStartPicker(false);
-                }}
-              />
-            </View>
-          </Pressable>
-        </Modal>
+            <Text>
+              {startTime ? startTime.toLocaleTimeString() : "Select time"}
+            </Text>
+            <Ionicons name="time-outline" size={20} />
+          </TouchableOpacity>
+        </LabeledInput>
 
-        {/* End Time Picker */}
-        <Text style={styles.label}>End Time</Text>
-        <TouchableOpacity
-          style={styles.input}
-          onPress={() => setShowEndPicker(true)}
-        >
-          <Text>{endTime ? endTime.toLocaleTimeString() : "Select time"}</Text>
-          <Ionicons name="time-outline" size={20} />
-        </TouchableOpacity>
-        <Modal transparent visible={showEndPicker} animationType="fade">
-          <Pressable
-            style={styles.modalOverlay}
-            onPress={() => setShowEndPicker(false)}
+        <LabeledInput label="End Time">
+          <TouchableOpacity
+            style={styles.input}
+            onPress={() => setActiveModal("end")}
           >
-            <View style={styles.modalContent}>
-              <DateTimePicker
-                themeVariant="light"
-                value={endTime || new Date()}
-                mode="time"
-                display={Platform.OS === "ios" ? "spinner" : "default"}
-                onChange={(event, selectedTime) => {
-                  if (selectedTime) setEndTime(selectedTime);
-                  setShowEndPicker(false);
-                }}
-              />
-            </View>
-          </Pressable>
-        </Modal>
+            <Text>
+              {endTime ? endTime.toLocaleTimeString() : "Select time"}
+            </Text>
+            <Ionicons name="time-outline" size={20} />
+          </TouchableOpacity>
+        </LabeledInput>
 
-        {/* Buttons */}
+        {/* Action Buttons */}
         <View style={styles.buttonGroup}>
           <TouchableOpacity
             style={styles.cancelBtn}
@@ -241,9 +201,54 @@ export default function AddTaskScreen() {
           </TouchableOpacity>
         </View>
       </ScrollView>
+
+      {/* Modals */}
+      {activeModal === "type" && (
+        <Modal transparent visible animationType="fade">
+          <Pressable style={styles.modalOverlay} onPress={closeModal}>
+            <View style={styles.modalContent}>
+              {taskTypeOptions.map((option) => (
+                <TouchableOpacity
+                  key={option}
+                  onPress={() => {
+                    setTaskType(option);
+                    closeModal();
+                  }}
+                  style={{
+                    paddingVertical: 12,
+                    borderBottomWidth: 1,
+                    borderColor: "#eee",
+                  }}
+                >
+                  <Text>{option}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </Pressable>
+        </Modal>
+      )}
+      {activeModal === "date" && renderDateTimeModal("date", date, setDate)}
+      {activeModal === "start" &&
+        renderDateTimeModal("time", startTime, setStartTime)}
+      {activeModal === "end" &&
+        renderDateTimeModal("time", endTime, setEndTime)}
     </KeyboardAvoidingView>
   );
 }
+
+// Local reusable component for consistency
+const LabeledInput = ({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) => (
+  <View>
+    <Text style={styles.label}>{label}</Text>
+    {children}
+  </View>
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -334,5 +339,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     width: "90%",
+    color: "#111111",
   },
 });
