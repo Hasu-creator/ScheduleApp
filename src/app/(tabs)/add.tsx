@@ -90,6 +90,7 @@ export default function AddTaskScreen() {
       <Pressable style={styles.modalOverlay} onPress={closeModal}>
         <View style={styles.modalContent}>
           <DateTimePicker
+            themeVariant="light"
             value={value || new Date()}
             mode={mode}
             display={
@@ -157,7 +158,9 @@ export default function AddTaskScreen() {
             style={styles.input}
             onPress={() => setActiveModal("type")}
           >
-            <Text>{taskType || "Select task type"}</Text>
+            <Text style={!taskType && { color: "#A4A6AB" }}>
+              {taskType || "Select task type"}
+            </Text>
             <Ionicons name="chevron-down-outline" size={20} />
           </TouchableOpacity>
         </LabeledInput>
@@ -167,7 +170,9 @@ export default function AddTaskScreen() {
             style={styles.input}
             onPress={() => setActiveModal("date")}
           >
-            <Text>{date ? date.toDateString() : "Select date"}</Text>
+            <Text style={!date && { color: "#A4A6AB" }}>
+              {date ? date.toDateString() : "Select date"}
+            </Text>
             <Ionicons name="calendar-outline" size={20} />
           </TouchableOpacity>
         </LabeledInput>
@@ -177,7 +182,7 @@ export default function AddTaskScreen() {
             style={styles.input}
             onPress={() => setActiveModal("start")}
           >
-            <Text>
+            <Text style={!startTime && { color: "#A4A6AB" }}>
               {startTime ? startTime.toLocaleTimeString() : "Select time"}
             </Text>
             <Ionicons name="time-outline" size={20} />
@@ -189,7 +194,7 @@ export default function AddTaskScreen() {
             style={styles.input}
             onPress={() => setActiveModal("end")}
           >
-            <Text>
+            <Text style={!endTime && { color: "#A4A6AB" }}>
               {endTime ? endTime.toLocaleTimeString() : "Select time"}
             </Text>
             <Ionicons name="time-outline" size={20} />
@@ -213,7 +218,6 @@ export default function AddTaskScreen() {
         </View>
       </ScrollView>
 
-      {/* Modals */}
       {activeModal === "type" && (
         <Modal transparent visible animationType="fade">
           <Pressable style={styles.modalOverlay} onPress={closeModal}>
