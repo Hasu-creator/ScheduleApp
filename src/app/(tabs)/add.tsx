@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -16,18 +16,22 @@ import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useRouter } from "expo-router";
 import { useTasksStore } from "@/store/useTaskStore";
-
+import { db } from "../../../FirebaseConfig";
+import { collection, addDoc } from "firebase/firestore";
+import { useAuth } from "@/hooks/useAuth";
+import { useLoadingStore } from "@/hooks/useLoading";
 const taskTypeOptions = ["Assignment", "Reminder", "Revision"];
 const tabOptions = ["Tasks", "Classes", "Exams", "Vacations"];
 
 export default function AddTaskScreen() {
   const router = useRouter();
-  const addTask = useTasksStore((state) => state.addTask);
-
+  const addTaskLocal = useTasksStore((state) => state.addTask);
+  const { setIsLoading } = useLoadingStore();
   const [tab, setTab] = useState("Tasks");
   const [taskName, setTaskName] = useState("");
   const [description, setDescription] = useState("");
   const [taskType, setTaskType] = useState("");
+  const { user } = useAuth();
 
   const [date, setDate] = useState<Date | null>(null);
   const [startTime, setStartTime] = useState<Date | null>(null);
@@ -48,14 +52,12 @@ export default function AddTaskScreen() {
     setEndTime(null);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!taskName || !date || !startTime || !endTime) {
       Alert.alert("Please fill in all required fields.");
       return;
     }
-
-    addTask({
-      id: Date.now().toString(),
+    const newTask = {
       title: taskName,
       description,
       type: taskType || tab,
@@ -63,10 +65,20 @@ export default function AddTaskScreen() {
       startTime: startTime.toISOString(),
       endTime: endTime.toISOString(),
       completed: false,
-    });
-
-    handleResetState();
-    router.back();
+      userId: user?.uid || "",
+    };
+    try {
+      setIsLoading(true);
+      await addDoc(collection(db, "tasks"), newTask);
+      addTaskLocal(newTask);
+      handleResetState();
+      setIsLoading(false);
+      router.back();
+    } catch (error) {
+      setIsLoading(false);
+      console.error("Error adding task to Firestore:", error);
+      Alert.alert("Error", "Could not save task. Please try again.");
+    }
   };
 
   const renderDateTimeModal = (
@@ -78,7 +90,6 @@ export default function AddTaskScreen() {
       <Pressable style={styles.modalOverlay} onPress={closeModal}>
         <View style={styles.modalContent}>
           <DateTimePicker
-            themeVariant="light"
             value={value || new Date()}
             mode={mode}
             display={
@@ -185,7 +196,7 @@ export default function AddTaskScreen() {
           </TouchableOpacity>
         </LabeledInput>
 
-        {/* Action Buttons */}
+        {/* Buttons */}
         <View style={styles.buttonGroup}>
           <TouchableOpacity
             style={styles.cancelBtn}
@@ -236,7 +247,6 @@ export default function AddTaskScreen() {
   );
 }
 
-// Local reusable component for consistency
 const LabeledInput = ({
   label,
   children,
@@ -339,6 +349,5 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     width: "90%",
-    color: "#111111",
   },
 });

@@ -1,8 +1,27 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { View, StyleSheet } from "react-native";
-
+import { View, StyleSheet, ActivityIndicator } from "react-native";
+import { useEffect } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { useTasksStore } from "@/store/useTaskStore";
+import { useLoadingStore } from "@/hooks/useLoading";
 export default function TabsLayout() {
+  const { user } = useAuth();
+  const { isLoading, withLoading } = useLoadingStore();
+  const fetchTasks = useTasksStore((state) => state.fetchTasks);
+
+  useEffect(() => {
+    if (user) {
+      withLoading(() => fetchTasks());
+    }
+  }, [user]);
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
   return (
     <Tabs
       screenOptions={({ route }) => ({
@@ -50,7 +69,7 @@ export default function TabsLayout() {
         headerShown: false,
         tabBarStyle: {
           height: 70,
-          backgroundColor: "transparent"
+          backgroundColor: "transparent",
         },
         tabBarLabelStyle: {
           display: "none",

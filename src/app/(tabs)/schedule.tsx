@@ -1,8 +1,5 @@
-// app/today.tsx
-
 import React, { useState } from "react";
 import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import TaskCard from "@/components/TaskCard";
 import { useTasksStore } from "@/store/useTaskStore";
 import { getCurrentWeekDates } from "@/utils/helper";
@@ -10,12 +7,14 @@ import { format } from "date-fns";
 import DateSelector from "@/components/DateSelector";
 import { formatTime } from "@/utils/helper";
 import Header from "@/components/Header";
-export default function TodayScreen() {
-  const tasks = useTasksStore((state) => state.tasks); // Assuming you store all tasks here
 
-  const todayTasks = tasks; // filter for today
+export default function TodayScreen() {
+  const tasks = useTasksStore((state) => state.tasks);
   const [selectedDate, setSelectedDate] = useState(
     format(new Date(), "yyyy-MM-dd")
+  );
+  const todayTasks = tasks.filter(
+    (task) => format(new Date(task.date), "yyyy-MM-dd") === selectedDate
   );
   const dateList = getCurrentWeekDates();
   return (
@@ -28,12 +27,10 @@ export default function TodayScreen() {
         source={require("@/images/bg_radiant_home_1.png")}
         style={styles.imageBg2}
       />
-      {/* Header */}
       <Header isDate />
 
       <Text style={styles.todayLabel}>Today</Text>
 
-      {/* Weekday Tabs */}
       <View style={styles.weekDays}>
         <DateSelector
           dates={dateList}
@@ -42,7 +39,6 @@ export default function TodayScreen() {
         />
       </View>
 
-      {/* Task Cards */}
       <ScrollView style={styles.taskList} showsVerticalScrollIndicator={false}>
         {todayTasks.map((task) => (
           <TaskCard

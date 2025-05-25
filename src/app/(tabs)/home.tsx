@@ -1,5 +1,5 @@
 // app/index.tsx or app/home.tsx
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -16,7 +16,10 @@ import { formatTime } from "@/utils/helper";
 
 export default function HomeScreen() {
   const tasks = useTasksStore((state) => state.tasks);
-
+  const fetchTasks = useTasksStore((state) => state.fetchTasks);
+  useEffect(() => {
+    fetchTasks();
+  }, []);
   return (
     <View style={styles.container}>
       <Header />

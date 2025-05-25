@@ -6,9 +6,13 @@
       }
     },
     "owner": "hoanganhvu123",
-    "slug": "study-hub",
+    "slug": "scheduleapp",
     "plugins": [
       "expo-font"
-    ]
+    ],
+    "scheme": "scheduleapp",
+    "android": {
+      "package": "com.hoanganhvu123.studyhub"
+    }
   }
 }

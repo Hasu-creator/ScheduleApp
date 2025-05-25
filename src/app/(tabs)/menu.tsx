@@ -1,6 +1,6 @@
+import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import {
-  View,
   Text,
   StyleSheet,
   Image,
@@ -24,7 +24,7 @@ export default function MenuScreen() {
   );
 
   return (
-    <View style={styles.container}>
+    <LinearGradient colors={["#C5D1FC", "#F7F8FF"]} style={styles.container}>
       <Text style={styles.title}>Menu</Text>
       <FlatList
         data={menuItems}
@@ -34,7 +34,7 @@ export default function MenuScreen() {
         columnWrapperStyle={styles.row}
         contentContainerStyle={styles.grid}
       />
-    </View>
+    </LinearGradient>
   );
 }
 const styles = StyleSheet.create({

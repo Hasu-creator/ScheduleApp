@@ -10,14 +10,7 @@ interface HeaderProps {
 }
 
 export default function Header({ isDate }: HeaderProps) {
-  const router = useRouter();
-  const logout = async () => {
-    const auth = getAuth();
-    await signOut(auth);
-    router.replace("/login");
-  };
-
-  const today = format(new Date(), "d MMMM yyyy"); // e.g., 24 May 2025
+  const today = format(new Date(), "d MMMM yyyy");
 
   return (
     <View style={styles.container}>
@@ -28,7 +21,6 @@ export default function Header({ isDate }: HeaderProps) {
         </View>
       ) : (
         <>
-          {/* Left side: Avatar + Greeting */}
           <View style={styles.left}>
             <Image
               source={require("../images/avatar.png")}
@@ -39,9 +31,7 @@ export default function Header({ isDate }: HeaderProps) {
               <Text style={styles.name}>Chau Loc</Text>
             </View>
           </View>
-
-          {/* Right side: Notification bell */}
-          <TouchableOpacity onPress={logout}>
+          <TouchableOpacity>
             <Ionicons name="notifications-outline" size={28} color="#222" />
           </TouchableOpacity>
         </>

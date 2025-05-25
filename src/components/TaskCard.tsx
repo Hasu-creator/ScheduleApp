@@ -19,7 +19,6 @@ export default function TaskCard({
   description,
 }: TaskCardProps) {
   const completeTask = useTasksStore((state) => state.completeTask);
-
   return (
     <View style={[styles.card, completed && styles.cardCompleted]}>
       <View>
