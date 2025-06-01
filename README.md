@@ -113,4 +113,8 @@ Scan the QR code with Expo Go to open the app on your phone.
 ```
 ### Demo
 
+https://github.com/user-attachments/assets/68118d89-3ae6-4811-b6bb-cde733bd33fc
+
+
+
 
