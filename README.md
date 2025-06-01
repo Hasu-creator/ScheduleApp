@@ -1,87 +1,116 @@
 # React Native Todo App
 
-A cross-platform mobile Todo application built with React Native, Expo, and TypeScript. This application integrates with DummyJSON APIs for user authentication and Todo management.
+A cross-platform mobile task management application built with **React Native**, **Expo**, and **TypeScript**. This application integrates with **Firebase** for authentication and cloud storage of user tasks. Built using **Expo Router** and **Zustand** for routing and state management, it provides a clean and responsive UI for managing daily schedules and todos.
 
+## ✨ Features
 
-## Features
+### ✅ User Authentication
+- Firebase Authentication with email & password
+- Secure session persistence
 
-- **User Authentication**
-  - Login with DummyJSON credentials
-  - Secure token storage
-  - Protected routes
+### 📋 Task Management
+- Create, view, and delete tasks
+- Mark tasks as complete
+- Organize tasks by date and category
+- View daily and scheduled tasks
 
-- **Todo Management**
-  - View all todos
-  - Add new todos
-  - Edit existing todos
-  - Mark todos as complete/incomplete
-  - Delete todos
+### 🎨 Modern UI/UX
+- Custom UI components: TaskCard, TodaySection, ProgressBar, etc.
+- Responsive design with light structure
+- Navigation with Expo Router and bottom tab layout
 
-- **Modern UI**
-  - Clean UI
+### ⚙️ Tech Stack
 
-- **Error Handling**
-  - API error handling
-  - With Error messages
-  - Loading indicators for operations
+- **React Native** (via Expo)
+- **Expo Router** for file-based navigation
+- **TypeScript**
+- **Firebase** (Authentication + Firestore)
+- **Zustand** for global state management
+- **AsyncStorage** for token/session management
 
-## Technologies Used
+---
 
-- **React Native** - Cross-platform mobile framework
-- **Expo** - Development platform for React Native
-- **Expo Router** - File-based routing for Expo apps
-- **TypeScript** - Type-safe JavaScript
-- **React Native Paper** - Material Design components
-- **Axios** - HTTP client for API requests
-- **AsyncStorage** - Local storage for authentication tokens
-- **DummyJSON API** - Mock REST API for authentication and todos
-
-## Project Structure
-
+## 📁 Folder Structure
 ```
 TODO-APP/
 ├── src/
-│   ├── app/
-│   │   ├── (tabs)/             # Tabs routes
-│   │   │   ├── _layout.tsx     # Layout for authenticated routes
-│   │   │   ├── home.tsx        # Todo list screen
-│   │   │   ├── add.tsx         # Add todo screen
-│   │   │   └── schedule.tsx    # Schedule screen
-│   │   │   └── menu.tsx        # Schedule screen
-│   │   │   └── profile.tsx     # Schedule screen
-│   │   ├── _layout.tsx         # Root layout with providers
-│   │   ├── index.tsx           # Entry point with auth redirection
-│   │   └── login.tsx           # Login screen
-│   ├── components/             # Reusable components
-├── assets/                     # Images and other static assets
+│   ├── app/                                # Expo Router pages
+│   │   ├── (tabs)/                         # Authenticated tab routes
+│   │   │   ├── _layout.tsx                 # Tab navigation layout
+│   │   │   ├── home.tsx                    # Home screen (today's tasks)
+│   │   │   ├── add.tsx                     # Add new task screen
+│   │   │   ├── schedule.tsx                # Schedule overview
+│   │   │   ├── menu.tsx                    # Menu/settings screen
+│   │   │   └── profile.tsx                 # User profile and stats
+│   │   ├── _layout.tsx                     # Root layout (e.g. AuthProvider)
+│   │   ├── index.tsx                       # Entry point - redirect to login or tabs
+│   │   ├── login.tsx                       # Login screen
+│   │   └── signup.tsx                      # Signup screen
+│
+│   ├── components/                         # Reusable UI components
+│   │   ├── Header.tsx                      # Custom header with title/back
+│   │   ├── TaskCard.tsx                    # Displays a task item
+│   │   ├── TaskCategoryCard.tsx            # Category UI block
+│   │   ├── ProgressBar.tsx                 # Task completion progress
+│   │   ├── TodaySection.tsx                # Displays tasks for today
+│   │   ├── DateSelector.tsx                # Scrollable date row
+│   │   └── SocialButtons.tsx               # Social login buttons (optional)
+│
+│   ├── store/                              # Zustand global state
+│   │   └── useTaskStore.tsx                # Task state store
+│
+│   ├── hooks/                              # Custom hooks
+│   │   ├── useAuth.ts                      # Firebase auth handling
+│   │   └── useLoading.ts                   # Hook for loading states
+│
+│   ├── utils/                              # Utility functions and helpers
+│   │   └── helper.ts                       # Formatting, time utils, etc.
+│
+│   └── FirebaseConfig.ts                   # Firebase config/init
+│
+├── assets/                                 # Static assets (images, fonts, etc.)
+│   ├── images/
+│   │   └── logo.png
+│   └── fonts/
+│       └── Inter-Regular.ttf
+│
+├── .env                                    # Optional: environment variables
 ├── .gitignore
-├── app.json                    # Expo configuration
+├── app.json                                # Expo app configuration
 ├── package.json
-└── tsconfig.json               # TypeScript configuration
-```
-
-## Setup and Installation
-
-### Prerequisites
-
-Before you begin, ensure you have the following installed:
-
-- **Node.js** (v14 or newer)
-- **npm** (v6 or newer) or **yarn** (v1.22 or newer)
-- **Expo CLI**: `npm install -g expo-cli`
-- **Expo Go** app on your physical device (available on [iOS App Store](https://apps.apple.com/app/apple-store/id982107779) or [Google Play Store](https://play.google.com/store/apps/details?id=host.exp.exponent))
-
-### Installation Steps
-
-1. **Install Dependencies**
+├── tsconfig.json                           # TypeScript configuration
+└── README.md                               # Project overview
 
 ```
+
+## 🧩 Setup and Installation
+
+### ✅ Prerequisites
+
+- Node.js (v14+)
+- npm (v6+) or yarn
+- [Expo CLI](https://docs.expo.dev/get-started/installation/)
+- [Expo Go](https://expo.dev/client) on your mobile device
+
+### 📦 Installation Steps
+
+1. **Clone the Repository**
+
+```bash
+git clone https://github.com/your-username/task-manager-app.git
+cd task-manager-app
+# Using npm
 npm install
-# or if you use yarn
-npm yarn
-```
 
-2. **Start the development server**
+# or using yarn
+yarn install
+
+# Start the Development Server
+npm run start
+
+Scan the QR code with Expo Go to open the app on your phone.
+
 ```
-npx expo start
-```
+### Demo
+
+
