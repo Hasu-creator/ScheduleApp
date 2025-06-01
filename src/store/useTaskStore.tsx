@@ -50,9 +50,9 @@ export const useTasksStore = create<TaskStore>((set, get) => ({
         userId: user.uid,
       });
 
-      set((state) => ({
-        tasks: [...state.tasks, { ...task, id: docRef.id }],
-      }));
+      // set((state) => ({
+      //   tasks: [...state.tasks, { ...task, id: docRef.id }],
+      // }));
     } catch (error) {
       console.error("Failed to add task:", error);
     } finally {
@@ -63,7 +63,7 @@ export const useTasksStore = create<TaskStore>((set, get) => ({
     const auth = getAuth();
     const user = auth.currentUser;
     if (!user) return;
-
+    set({tasks: []})
     try {
       const q = query(collection(db, "tasks"), where("userId", "==", user.uid));
       const querySnapshot = await getDocs(q);

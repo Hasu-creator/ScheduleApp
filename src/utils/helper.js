@@ -4,6 +4,9 @@ import { format, startOfWeek, addDays } from "date-fns";
 export function formatTime(time) {
   return dayjs(time).format("h:mm A");
 }
+export function formatDate(time) {
+  return dayjs(time).format("DD/MM/YYYY");
+}
 
 export function getCurrentWeekDates() {
   const today = new Date();

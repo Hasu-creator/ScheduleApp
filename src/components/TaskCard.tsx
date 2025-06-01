@@ -10,6 +10,7 @@ interface TaskCardProps {
   description?: string;
 }
 import { useTasksStore } from "@/store/useTaskStore";
+import ThreeDotMenu from "./ThreeDotMenu";
 export default function TaskCard({
   id,
   title,
@@ -19,6 +20,10 @@ export default function TaskCard({
   description,
 }: TaskCardProps) {
   const completeTask = useTasksStore((state) => state.completeTask);
+  const deleteTask = useTasksStore((state) => state.deleteTask);
+  const handleDelete = () => {
+    deleteTask(id);
+  };
   return (
     <View style={[styles.card, completed && styles.cardCompleted]}>
       <View>
@@ -62,6 +67,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 6,
     elevation: 1,
+    minHeight: 100,
   },
   cardCompleted: {
     borderColor: "#3B82F6",
