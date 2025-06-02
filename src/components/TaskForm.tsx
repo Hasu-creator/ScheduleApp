@@ -154,31 +154,34 @@ export default function TaskForm() {
           <Ionicons name="calendar-outline" size={20} />
         </TouchableOpacity>
       </LabeledInput>
-
-      <LabeledInput label="Start Time">
-        <TouchableOpacity
-          style={styles.input}
-          onPress={() => setActiveModal("start")}
-        >
-          <Text style={!startTime && { color: "#A4A6AB" }}>
-            {startTime ? startTime.toLocaleTimeString() : "Select time"}
-          </Text>
-          <Ionicons name="time-outline" size={20} />
-        </TouchableOpacity>
-      </LabeledInput>
-
-      <LabeledInput label="End Time">
-        <TouchableOpacity
-          style={styles.input}
-          onPress={() => setActiveModal("end")}
-        >
-          <Text style={!endTime && { color: "#A4A6AB" }}>
-            {endTime ? endTime.toLocaleTimeString() : "Select time"}
-          </Text>
-          <Ionicons name="time-outline" size={20} />
-        </TouchableOpacity>
-      </LabeledInput>
-
+      <View style={[styles.inputGroup]}>
+        <View style={styles.inputItem}>
+          <LabeledInput label="Start Time">
+            <TouchableOpacity
+              style={[styles.input]}
+              onPress={() => setActiveModal("start")}
+            >
+              <Text style={!startTime && { color: "#A4A6AB" }}>
+                {startTime ? startTime.toLocaleTimeString() : "Select time"}
+              </Text>
+              <Ionicons name="time-outline" size={20} />
+            </TouchableOpacity>
+          </LabeledInput>
+        </View>
+        <View style={styles.inputItem}>
+          <LabeledInput label="End Time">
+            <TouchableOpacity
+              style={[styles.input]}
+              onPress={() => setActiveModal("end")}
+            >
+              <Text style={!endTime && { color: "#A4A6AB" }}>
+                {endTime ? endTime.toLocaleTimeString() : "Select time"}
+              </Text>
+              <Ionicons name="time-outline" size={20} />
+            </TouchableOpacity>
+          </LabeledInput>
+        </View>
+      </View>
       {/* Buttons */}
       <View style={styles.buttonGroup}>
         <TouchableOpacity
@@ -311,5 +314,13 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     width: "90%",
+  },
+  inputGroup: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 10,
+  },
+  inputItem: {
+    flex: 1,
   },
 });

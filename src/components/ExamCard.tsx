@@ -1,15 +1,21 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { Exam } from "@/store/useExamStore";
+import { Exam, useExamsStore } from "@/store/useExamStore";
 import { formatTime, formatDate } from "@/utils/helper";
+import ThreeDotMenu from "./ThreeDotMenu";
 
 type Props = {
   item: Exam;
 };
 
 const ExamCard = ({ item }: Props) => {
+  const deleteExam = useExamsStore((state) => state.deleteExam);
+  const handleDelete = () => {
+    deleteExam(item.id);
+  };
   return (
     <View style={styles.card}>
+      <ThreeDotMenu onDelete={handleDelete} />
       <Text style={styles.type}>Exam</Text>
       <Text style={styles.title}>{item.title}</Text>
       <Text style={styles.description}>{item.description}</Text>

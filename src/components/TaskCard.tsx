@@ -26,6 +26,7 @@ export default function TaskCard({
   };
   return (
     <View style={[styles.card, completed && styles.cardCompleted]}>
+      {isContent && <ThreeDotMenu onDelete={handleDelete} />}
       <View>
         <Text style={styles.title}>{title}</Text>
         <View style={styles.timeRow}>

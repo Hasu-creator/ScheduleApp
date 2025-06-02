@@ -52,9 +52,9 @@ export const useExamsStore = create<ExamStore>((set, get) => ({
         userId: user.uid,
       });
 
-      // set((state) => ({
-      //   exams: [...state.exams, { ...exam, id: docRef.id }],
-      // }));
+      set((state) => ({
+        exams: [...state.exams, { ...exam, id: docRef.id }],
+      }));
     } catch (error) {
       console.error("Failed to add exam:", error);
     } finally {

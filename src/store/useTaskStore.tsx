@@ -50,9 +50,9 @@ export const useTasksStore = create<TaskStore>((set, get) => ({
         userId: user.uid,
       });
 
-      // set((state) => ({
-      //   tasks: [...state.tasks, { ...task, id: docRef.id }],
-      // }));
+      set((state) => ({
+        tasks: [...state.tasks, { ...task, id: docRef.id }],
+      }));
     } catch (error) {
       console.error("Failed to add task:", error);
     } finally {

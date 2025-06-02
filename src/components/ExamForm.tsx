@@ -144,53 +144,62 @@ export default function ClassForm() {
         </TouchableOpacity>
       </LabeledInput>
 
-      <LabeledInput label="Start Time">
-        <TouchableOpacity
-          style={styles.input}
-          onPress={() => setActiveModal("start")}
-        >
-          <Text style={!startTime && { color: "#A4A6AB" }}>
-            {startTime ? startTime.toLocaleTimeString() : "Select time"}
-          </Text>
-          <Ionicons name="time-outline" size={20} />
-        </TouchableOpacity>
-      </LabeledInput>
-
-      <LabeledInput label="End Time">
-        <TouchableOpacity
-          style={styles.input}
-          onPress={() => setActiveModal("end")}
-        >
-          <Text style={!endTime && { color: "#A4A6AB" }}>
-            {endTime ? endTime.toLocaleTimeString() : "Select time"}
-          </Text>
-          <Ionicons name="time-outline" size={20} />
-        </TouchableOpacity>
-      </LabeledInput>
-
-      <LabeledInput label="Building">
-        <TextInput
-          style={[styles.input, { height: 100 }]}
-          placeholder=""
-          value={building}
-          onChangeText={setBuilding}
-          multiline
-        />
-      </LabeledInput>
-
-      <LabeledInput label="Room">
-        <TextInput
-          style={[styles.input, { height: 100 }]}
-          placeholder=""
-          value={room}
-          onChangeText={setRoom}
-          multiline
-        />
-      </LabeledInput>
+      <View style={[styles.inputGroup]}>
+        <View style={styles.inputItem}>
+          <LabeledInput label="Start Time">
+            <TouchableOpacity
+              style={[styles.input]}
+              onPress={() => setActiveModal("start")}
+            >
+              <Text style={!startTime && { color: "#A4A6AB" }}>
+                {startTime ? startTime.toLocaleTimeString() : "Select time"}
+              </Text>
+              <Ionicons name="time-outline" size={20} />
+            </TouchableOpacity>
+          </LabeledInput>
+        </View>
+        <View style={styles.inputItem}>
+          <LabeledInput label="End Time">
+            <TouchableOpacity
+              style={[styles.input]}
+              onPress={() => setActiveModal("end")}
+            >
+              <Text style={!endTime && { color: "#A4A6AB" }}>
+                {endTime ? endTime.toLocaleTimeString() : "Select time"}
+              </Text>
+              <Ionicons name="time-outline" size={20} />
+            </TouchableOpacity>
+          </LabeledInput>
+        </View>
+      </View>
+      <View style={[styles.inputGroup]}>
+        <View style={styles.inputItem}>
+          <LabeledInput label="Building">
+            <TextInput
+              style={[styles.input]}
+              placeholder=""
+              value={building}
+              onChangeText={setBuilding}
+              multiline
+            />
+          </LabeledInput>
+        </View>
+        <View style={styles.inputItem}>
+          <LabeledInput label="Room">
+            <TextInput
+              style={[styles.input]}
+              placeholder=""
+              value={room}
+              onChangeText={setRoom}
+              multiline
+            />
+          </LabeledInput>
+        </View>
+      </View>
 
       <LabeledInput label="During Time (In minutes)">
         <TextInput
-          style={[styles.input, { height: 100 }]}
+          style={[styles.input]}
           placeholder=""
           value={duringTime}
           onChangeText={setDuringTime}
@@ -307,5 +316,13 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     width: "90%",
+  },
+  inputGroup: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 10,
+  },
+  inputItem: {
+    flex: 1,
   },
 });
