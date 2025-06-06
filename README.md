@@ -33,8 +33,18 @@ A cross-platform mobile task management application built with **React Native**,
 ## 📁 Folder Structure
 ```
 TODO-APP/
+
+```bash
+.
+├── .expo/                     # Expo-generated files
+├── .git/                      # Git repo
+├── .vscode/                   # VS Code editor configs
+├── android/                   # Android native build folder
+├── assets/                    # Images, fonts, and other static files
+├── node_modules/              # Dependencies
+│
 ├── src/
-│   ├── app/                                # Expo Router pages
+│   ├── app/                   # Screens for each route using Expo Router
 │   │   ├── (tabs)/                         # Authenticated tab routes
 │   │   │   ├── _layout.tsx                 # Tab navigation layout
 │   │   │   ├── home.tsx                    # Home screen (today's tasks)
@@ -46,39 +56,43 @@ TODO-APP/
 │   │   ├── index.tsx                       # Entry point - redirect to login or tabs
 │   │   ├── login.tsx                       # Login screen
 │   │   └── signup.tsx                      # Signup screen
+│   ├── components/            # Reusable UI components
+│   │   ├── ClassCard.tsx
+│   │   ├── ClassForm.tsx
+│   │   ├── DateSelector.tsx
+│   │   ├── ExamCard.tsx
+│   │   ├── ExamForm.tsx
+│   │   ├── Header.tsx
+│   │   ├── ProgressBar.tsx
+│   │   ├── SocialButtons.tsx
+│   │   ├── TaskCard.tsx
+│   │   ├── TaskCategoryCard.tsx
+│   │   ├── TaskForm.tsx
+│   │   ├── ThreeDotMenu.tsx
+│   │   └── TodaySection.tsx
 │
-│   ├── components/                         # Reusable UI components
-│   │   ├── Header.tsx                      # Custom header with title/back
-│   │   ├── TaskCard.tsx                    # Displays a task item
-│   │   ├── TaskCategoryCard.tsx            # Category UI block
-│   │   ├── ProgressBar.tsx                 # Task completion progress
-│   │   ├── TodaySection.tsx                # Displays tasks for today
-│   │   ├── DateSelector.tsx                # Scrollable date row
-│   │   └── SocialButtons.tsx               # Social login buttons (optional)
+│   ├── hooks/                 # Custom hooks
+│   │   ├── useAuth.tsx        # Firebase auth logic
+│   │   └── useLoading.tsx     # Global loading state
 │
-│   ├── store/                              # Zustand global state
-│   │   └── useTaskStore.tsx                # Task state store
+│   ├── images/                # App-specific images (empty for now)
 │
-│   ├── hooks/                              # Custom hooks
-│   │   ├── useAuth.ts                      # Firebase auth handling
-│   │   └── useLoading.ts                   # Hook for loading states
+│   ├── store/                 # Zustand stores for global state
+│   │   ├── useClassStore.tsx
+│   │   ├── useExamStore.tsx
+│   │   └── useTaskStore.tsx
 │
-│   ├── utils/                              # Utility functions and helpers
-│   │   └── helper.ts                       # Formatting, time utils, etc.
+│   └── utils/
+│       └── helper.js          # Helper functions
 │
-│   └── FirebaseConfig.ts                   # Firebase config/init
-│
-├── assets/                                 # Static assets (images, fonts, etc.)
-│   ├── images/
-│   │   └── logo.png
-│   └── fonts/
-│       └── Inter-Regular.ttf
-│
-├── .env                                    # Optional: environment variables
-├── .gitignore
-├── app.json                                # Expo app configuration
-├── package.json
-├── tsconfig.json                           # TypeScript configuration
+├── app.json                   # Expo project config
+├── eas.json                   # Expo Application Services config
+├── FirebaseConfig.ts          # Firebase client config (auth + Firestore)
+├── metro.config.js            # Metro bundler configuration
+├── package.json               # Project metadata and scripts
+├── package-lock.json          # Locked dependency versions (npm)
+├── tsconfig.json              # TypeScript configuration
+├── yarn.lock                  # Locked dependency versions (yarn)
 └── README.md                               # Project overview
 
 ```
