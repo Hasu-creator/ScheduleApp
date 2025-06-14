@@ -6,11 +6,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage"; // 👈 Ma
 const firebaseConfig = {
   apiKey: "AIzaSyCBINFFiouzqSlgMDVe_563UHD0A_ol_kM",
   authDomain: "schedule-app-37f0c.firebaseapp.com",
+  databaseURL: "https://schedule-app-37f0c-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "schedule-app-37f0c",
-  storageBucket: "schedule-app-37f0c.appspot.com",
+  storageBucket: "schedule-app-37f0c.firebasestorage.app",
   messagingSenderId: "205971576199",
   appId: "1:205971576199:web:b4b4032a798a01d93cef22",
-  measurementId: "G-5YV5S8293N",
+  measurementId: "G-5YV5S8293N"
 };
 
 const app = initializeApp(firebaseConfig);
