@@ -13,10 +13,23 @@ import Header from "@/components/Header";
 import TaskCard from "@/components/TaskCard";
 import TaskCategoryCard from "@/components/TaskCategoryCard";
 import { formatTime } from "@/utils/helper";
-
+import { isToday } from "date-fns";
 export default function HomeScreen() {
   const tasks = useTasksStore((state) => state.tasks);
+  const todayTask = tasks.filter((item) => isToday(item.date));
   const fetchTasks = useTasksStore((state) => state.fetchTasks);
+  const countProgress = (startTime: string, endTime: string) => {
+    const now = new Date().getTime();
+    const start = new Date(startTime).getTime();
+    const end = new Date(endTime).getTime();
+
+    if (now <= start) return 0;
+    if (now >= end) return 100;
+    const totalDuration = end - start;
+    const elapsed = now - start;
+    const progress = elapsed / totalDuration;
+    return progress;
+  };
   useEffect(() => {
     fetchTasks();
   }, []);
@@ -24,7 +37,7 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <Header />
 
-      {tasks.length === 0 ? (
+      {todayTask.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Image
             source={require("@/images/bg_home_2.png")}
@@ -60,24 +73,22 @@ export default function HomeScreen() {
           <View style={styles.scroll}>
             <Text style={styles.sectionTitle}>Manage Daily Task</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              <TaskCategoryCard
-                title="UI Interface App"
-                description="Design user interface using prototype"
-                progress={0.6}
-                color="#4F46E5"
-              />
-              <TaskCategoryCard
-                title="Learn English"
-                description="Do reading, listening & writing ielts tasks"
-                progress={0.4}
-                color="#F59E0B"
-              />
+              {todayTask.map((item, index) => {
+                return (
+                  <TaskCategoryCard
+                    key={index}
+                    title={item.title}
+                    description={item.description}
+                    progress={countProgress(item.startTime, item.endTime)}
+                    color={index % 2 === 0 ? "#4F46E5" : "#F59E0B"}
+                  />
+                );
+              })}
             </ScrollView>
-            {/* TODO: Task list here */}
           </View>
           <Text style={styles.todayLabel}>Today’s Tasks</Text>
           <FlatList
-            data={tasks}
+            data={todayTask}
             keyExtractor={(item) => item.id}
             contentContainerStyle={{ paddingTop: 12 }}
             renderItem={({ item }) => (

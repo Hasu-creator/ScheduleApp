@@ -12,16 +12,26 @@ type Props = {
   progress: number;
   color: string;
 };
-
-export default function TaskCategoryCard({ title, description, progress, color }: Props) {
+export default function TaskCategoryCard({
+  title,
+  description,
+  progress,
+  color,
+}: Props) {
   return (
-    <View style={[styles.card, { backgroundColor: `${color}10`, width: cardWidth }]}>
-      <View style={styles.header}>
-        <Text style={styles.title}>{title}</Text>
-        <Ionicons name="arrow-forward-outline" size={18} color="#555" />
+    <View
+      style={[styles.card, { backgroundColor: `${color}10`, width: cardWidth }]}
+    >
+      <View style={styles.inner}>
+        <View>
+          <View style={styles.header}>
+            <Text style={styles.title}>{title}</Text>
+            <Ionicons name="arrow-forward-outline" size={18} color="#555" />
+          </View>
+          <Text style={styles.description}>{description}</Text>
+        </View>
+        <ProgressBar progress={progress} color={color} />
       </View>
-      <Text style={styles.description}>{description}</Text>
-      <ProgressBar progress={progress} color={color} />
     </View>
   );
 }
@@ -36,6 +46,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+  },
+  inner: {
+    flexGrow: 1,
+    justifyContent: "space-between",
   },
   title: {
     fontWeight: "bold",
